@@ -9,6 +9,7 @@ import org.apache.hadoop.hbase.client.Admin;
 import org.apache.hadoop.hbase.client.ColumnFamilyDescriptor;
 import org.apache.hadoop.hbase.client.ColumnFamilyDescriptorBuilder;
 import org.apache.hadoop.hbase.client.Connection;
+import org.apache.hadoop.hbase.client.ConnectionFactory;
 import org.apache.hadoop.hbase.client.Get;
 import org.apache.hadoop.hbase.client.Put;
 import org.apache.hadoop.hbase.client.Result;
@@ -17,6 +18,7 @@ import org.apache.hadoop.hbase.client.TableDescriptorBuilder;
 import org.apache.hadoop.hbase.util.Bytes;
 import org.springframework.stereotype.Service;
 
+
 /**
  * @author coderpwh
  */
@@ -24,15 +26,12 @@ import org.springframework.stereotype.Service;
 public class HbaseServiceImpl implements HbaseService {
 
 
-    @Resource
     private Configuration configuration;
 
 
-    @Resource
     private Connection connection;
 
 
-    @Resource
     private Admin admin;
 
 
@@ -43,11 +42,11 @@ public class HbaseServiceImpl implements HbaseService {
     @Override
     public String createBase() {
         init();
-        createTable("student",new String[]{"score"});
-        insertData("student","zhangsan","score","English","69");
-        insertData("student","zhangsan","score","Math","86");
-        insertData("student","zhangsan","score","Computer","77");
-        getData("student", "zhangsan", "score","English");
+        createTable("student", new String[]{"score"});
+        insertData("student", "zhangsan", "score", "English", "69");
+        insertData("student", "zhangsan", "score", "Math", "86");
+        insertData("student", "zhangsan", "score", "Computer", "77");
+        getData("student", "zhangsan", "score", "English");
         close();
         return "success";
     }
@@ -59,8 +58,10 @@ public class HbaseServiceImpl implements HbaseService {
     public void init() {
         configuration = HBaseConfiguration.create();
         configuration.set("hbase.rootdir", "hdfs://192.168.31.101:9000/hbase");
+        configuration.set("hbase.zookeeper.quorum", "192.168.31.101");
+        configuration.set("hbase.zookeeper.property.clientPort", "2181");
         try {
-            configuration = HBaseConfiguration.create(configuration);
+            connection = ConnectionFactory.createConnection(configuration);
             admin = connection.getAdmin();
         } catch (Exception e) {
             e.printStackTrace();
@@ -142,24 +143,21 @@ public class HbaseServiceImpl implements HbaseService {
      * @param colFamily
      * @param col
      */
-    public void getData(String tableName,String rowKey,String
-            colFamily, String col){
+    public void getData(String tableName, String rowKey, String
+            colFamily, String col) {
         try {
             Table table = connection.getTable(TableName.valueOf(tableName));
             Get get = new Get(rowKey.getBytes());
-            get.addColumn(colFamily.getBytes(),col.getBytes());
+            get.addColumn(colFamily.getBytes(), col.getBytes());
             Result result = table.get(get);
             System.out.println(new
-                    String(result.getValue(colFamily.getBytes(),col==null?null:col.getBytes())));
+                    String(result.getValue(colFamily.getBytes(), col == null ? null : col.getBytes())));
             table.close();
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
     }
-
-
-
 
 
 }

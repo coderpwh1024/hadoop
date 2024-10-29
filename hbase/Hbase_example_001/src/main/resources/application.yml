@@ -1,2 +1,7 @@
 server:
   port: 9001
+
+
+hbase:
+  zookeeper:
+      quorum: 192.168.31.101:2181
