@@ -1,17 +1,23 @@
 package com.coderpwh.service.impl;
 
+import java.io.IOException;
+import java.util.Iterator;
+import java.util.StringTokenizer;
+
 import com.coderpwh.service.WordCountService;
 import com.coderpwh.service.mapreduce.IntSumReducer;
 import com.coderpwh.service.mapreduce.TokenizerMapper;
 import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.io.Text;
-import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.mapreduce.Job;
+import org.apache.hadoop.mapreduce.Mapper;
+import org.apache.hadoop.mapreduce.Reducer;
 import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
+import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 import org.apache.hadoop.util.GenericOptionsParser;
 import org.springframework.stereotype.Service;
-import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 
 /**
  * @author coderpwh
@@ -27,9 +33,15 @@ public class WordCountServiceImpl implements WordCountService {
     @Override
     public String getWordCountInfo() {
         try {
-            String[] arr = new String[10];
+            String[] args = new String[10];
+            args[0]="wordCount";
+            args[1]="wordCount";
+            args[2]="wordCount";
+            args[3]="wordCount";
+
             Configuration conf = new Configuration();
-            String[] otherArgs = (new GenericOptionsParser(conf, arr)).getRemainingArgs();
+            conf.set("fs.defaultFS", "hdfs://192.168.31.101:9000");
+            String[] otherArgs = (new GenericOptionsParser(conf, args)).getRemainingArgs();
             if (otherArgs.length < 2) {
                 System.err.println("Usage: wordcount <in> [<in>...] <out>");
                 System.exit(2);
