@@ -13,18 +13,15 @@ public class IntSumReducer extends Reducer {
 
     private IntWritable result = new IntWritable();
 
-
-
-    public void reduce(Text key,Iterable<IntWritable> values,Reducer<Text, IntWritable, Text, IntWritable>.Context context) throws IOException, InterruptedException {
-        int sum=0;
-        IntWritable val = null;
-
-        for(Iterator i$ = values.iterator(); i$.hasNext(); sum += val.get()){
-            val = (IntWritable)i$.next();
+    public void reduce(Text key, Iterable<IntWritable> values,
+                       Context context
+    ) throws IOException, InterruptedException {
+        int sum = 0;
+        for (IntWritable val : values) {
+            sum += val.get();
         }
-
-        this.result.set(sum);
-        context.write(key, this.result);
+        result.set(sum);
+        context.write(key, result);
     }
 
 
