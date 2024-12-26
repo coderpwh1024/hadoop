@@ -25,7 +25,7 @@ public class SparkServiceImpl implements SparkService {
         StringBuilder builder = new StringBuilder();
 
         String logFile = "file:///usr/local/hadoop/spark/README.md";
-        SparkConf conf = new SparkConf().setMaster("").setAppName("SparkServiceImpl");
+        SparkConf conf = new SparkConf().setMaster("192.168.31.229").setAppName("SparkServiceImpl");
 
         JavaSparkContext sc = new JavaSparkContext(conf);
         JavaRDD<String> logData = sc.textFile(logFile).cache();
