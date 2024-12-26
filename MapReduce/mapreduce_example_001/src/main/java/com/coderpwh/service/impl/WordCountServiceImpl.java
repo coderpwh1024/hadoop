@@ -33,20 +33,8 @@ public class WordCountServiceImpl implements WordCountService {
     @Override
     public String getWordCountInfo() {
         try {
-            String[] args = new String[10];
-            args[0]="wordCount";
-            args[1]="wordCount";
-            args[2]="wordCount";
-            args[3]="wordCount";
-
             Configuration conf = new Configuration();
             conf.set("fs.defaultFS", "hdfs://192.168.31.101:9000");
-            String[] otherArgs = (new GenericOptionsParser(conf, args)).getRemainingArgs();
-            if (otherArgs.length < 2) {
-                System.err.println("Usage: wordcount <in> [<in>...] <out>");
-                System.exit(2);
-            }
-
             Job job = Job.getInstance(conf, "word count");
             job.setJarByClass(WordCountServiceImpl.class);
             job.setMapperClass(TokenizerMapper.class);
@@ -54,10 +42,8 @@ public class WordCountServiceImpl implements WordCountService {
             job.setReducerClass(IntSumReducer.class);
             job.setOutputKeyClass(Text.class);
             job.setOutputValueClass(IntWritable.class);
-            for (int i = 0; i < otherArgs.length - 1; i++) {
-                FileInputFormat.addInputPath(job, new Path(otherArgs[i]));
-            }
-            FileOutputFormat.setOutputPath(job, new Path(otherArgs[otherArgs.length - 1]));
+            FileInputFormat.addInputPath(job, new Path("hdfs://192.168.31.101:9000/user/hadoop/b"));
+            FileOutputFormat.setOutputPath(job, new Path("hdfs://192.168.31.101:9000/user/hadoop/a"));
             System.exit(job.waitForCompletion(true) ? 0 : 1);
         } catch (Exception e) {
             e.printStackTrace();
