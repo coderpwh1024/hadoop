@@ -1,6 +1,7 @@
 package com.coderpwh.service.impl;
 
 import com.coderpwh.service.SparkService;
+import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.spark.SparkConf;
 import org.apache.spark.api.java.JavaRDD;
@@ -16,6 +17,12 @@ import org.apache.spark.api.java.function.Function;
 public class SparkServiceImpl implements SparkService {
 
 
+
+    @Resource
+    private  JavaSparkContext javaSparkContext;
+
+
+
     /***
      * spark
      * @return
@@ -25,10 +32,12 @@ public class SparkServiceImpl implements SparkService {
         StringBuilder builder = new StringBuilder();
 
         String logFile = "file:///usr/local/hadoop/spark/README.md";
-        SparkConf conf = new SparkConf().setMaster("192.168.31.229").setAppName("SparkServiceImpl");
+//        SparkConf conf = new SparkConf().setMaster("192.168.31.229").setAppName("SparkServiceImpl");
 
-        JavaSparkContext sc = new JavaSparkContext(conf);
-        JavaRDD<String> logData = sc.textFile(logFile).cache();
+//        JavaSparkContext sc = new JavaSparkContext(conf);
+//        JavaRDD<String> logData = sc.textFile(logFile).cache();
+
+        JavaRDD<String> logData=   javaSparkContext.textFile(logFile).cache();;
         long numAs = logData.filter(new Function<String, Boolean>() {
             @Override
             public Boolean call(String s) {
@@ -48,5 +57,6 @@ public class SparkServiceImpl implements SparkService {
         builder.append("a:").append(numAs).append(" ,").append("b:").append(numBs);
         return builder.toString();
     }
+
 
 }
