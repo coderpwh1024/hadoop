@@ -3,8 +3,9 @@ package com.coderpwh.service.impl;
 import com.coderpwh.service.SparkService;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.spark.SparkConf;
+//import org.apache.spark.SparkConf;
 import org.apache.spark.api.java.JavaRDD;
+//import org.apache.spark.api.java.JavaSparkContext;
 import org.apache.spark.api.java.JavaSparkContext;
 import org.springframework.stereotype.Service;
 import org.apache.spark.api.java.function.Function;
@@ -19,7 +20,7 @@ public class SparkServiceImpl implements SparkService {
 
 
     @Resource
-    private  JavaSparkContext javaSparkContext;
+    private JavaSparkContext javaSparkContext;
 
 
 

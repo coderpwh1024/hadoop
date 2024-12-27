@@ -13,7 +13,7 @@ public class SparkConfig {
 
 
     @Bean
-    public JavaSparkContext getSparkContext() {
+    public JavaSparkContext javaSparkContext() {
         SparkConf conf = new SparkConf()
                 .setAppName("SpringBootSparkApp")
                 // 根据需要设置Master URL，例如 "spark://HOST:PORT"
