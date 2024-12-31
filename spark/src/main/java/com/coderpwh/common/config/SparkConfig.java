@@ -2,6 +2,7 @@ package com.coderpwh.common.config;
 
 import org.apache.spark.SparkConf;
 import org.apache.spark.api.java.JavaSparkContext;
+import org.apache.spark.sql.SparkSession;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -13,17 +14,27 @@ public class SparkConfig {
 
 
     @Bean
-    public JavaSparkContext javaSparkContext() {
-        SparkConf conf = new SparkConf()
-                .setAppName("SpringBootSparkApp")
-                // 根据需要设置Master URL，例如 "spark://HOST:PORT"
-                .setMaster("spark://192.168.31.229")
-                // 可选配置
-                .set("spark.executor.memory", "1g")
-                // 可选配置
-                .set("spark.driver.memory", "1g");
-
-        return new JavaSparkContext(conf);
+    public SparkConf sparkConf() {
+        return new SparkConf()
+                .setAppName("SparkSpringBootApp")
+                // 设置远程 Spark Master URL
+                .setMaster("spark://localhost:7077")
+                .set("spark.executor.memory", "4g")
+                .set("spark.driver.memory", "2g");
     }
+
+    @Bean
+    public JavaSparkContext javaSparkContext(SparkConf sparkConf) {
+        return new JavaSparkContext(sparkConf);
+    }
+
+    @Bean
+    public SparkSession sparkSession(JavaSparkContext javaSparkContext) {
+        return SparkSession.builder()
+                .appName("SparkSpringBootApp")
+                .config(javaSparkContext.getConf())
+                .getOrCreate();
+    }
+
 
 }

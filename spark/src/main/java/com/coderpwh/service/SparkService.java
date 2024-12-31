@@ -12,4 +12,6 @@ public interface SparkService {
     String getSparkResult();
 
 
+    public void runSparkJob();
+
 }
